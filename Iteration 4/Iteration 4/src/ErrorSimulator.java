@@ -11,7 +11,7 @@ public class ErrorSimulator implements Runnable {
 	boolean isConnected = false;
 
 	InetAddress clientAddress;
-	int clientPort;
+	int clientPort; 
 
 	int proxyPort = 8080;
 	int server1Port = 8081;
