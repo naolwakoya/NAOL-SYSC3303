@@ -23,7 +23,7 @@ public class TftpServer {
 			se.printStackTrace();
 			System.exit(1);
 		}
-	}
+	} 
 
 	public void startReceiving() {
 		DatagramPacket receivePacket;

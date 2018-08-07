@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Client {
 
-	int REQUEST_PORT = 8080;
+	int REQUEST_PORT = 8081;
 	int sourceTID, destinationTID;
 
 	int resendAttempts = 3;
@@ -479,6 +479,7 @@ public class Client {
 
 	public void printError(byte[] error, int packetLength) {
 		System.out.println("Client: Received ERROR Packet ");
+
 		// display error code to user
 		int errorCode = error[3]; // get error code
 		if (errorCode == 1) {
@@ -592,7 +593,7 @@ public class Client {
 			REQUEST_PORT = 8081;
 		} else {
 			test = true;
-			REQUEST_PORT = 8081;
+			REQUEST_PORT = 8080;
 		}
 	}
 
