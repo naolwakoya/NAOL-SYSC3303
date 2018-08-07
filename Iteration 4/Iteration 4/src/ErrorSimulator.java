@@ -132,9 +132,6 @@ public class ErrorSimulator implements Runnable {
 			actionPerformed = true;
 		}
 
-		System.out.println("packettype" + packetType);
-		System.out.println("whatdo" + whatDo);
-
 		if (whatDo == 0) {
 			// no nothing, simply forward packet thats been received
 			System.out.println("Forwarding packet without altering it");
