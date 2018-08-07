@@ -131,6 +131,10 @@ public class ErrorSimulator implements Runnable {
 			whatDo = getOperation();
 			actionPerformed = true;
 		}
+
+		System.out.println("packettype" + packetType);
+		System.out.println("whatdo" + whatDo);
+
 		if (whatDo == 0) {
 			// no nothing, simply forward packet thats been received
 			System.out.println("Forwarding packet without altering it");
@@ -241,7 +245,7 @@ public class ErrorSimulator implements Runnable {
 				ioe.printStackTrace();
 				System.exit(1);
 			}
-		}else if (packetType.equals("ack") && whatDo == 9) {
+		}else if (packetType.equals("request") && whatDo == 9) {
 			System.out.println("Changing Op Code");
 			data[0] = 9;
 			data[1] = 9;
@@ -257,7 +261,7 @@ public class ErrorSimulator implements Runnable {
 				System.exit(1);
 			}
 
-		}else if (packetType.equals("ack") && whatDo == 10) {
+		}else if (packetType.equals("request") && whatDo == 10) {
 			System.out.println("Altering opcode of request packet...");
 
 
