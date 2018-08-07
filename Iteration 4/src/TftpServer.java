@@ -78,12 +78,14 @@ public class TftpServer {
 		}
 	}
 
+
 	/*
 	 * returns the server socket
 	 */
-	public DatagramSocket getServerSocket() {
+	public DatagramSocket getServerSocket(){
 		return serverSocket;
 	}
+
 
 	public static void main(String[] args) {
 

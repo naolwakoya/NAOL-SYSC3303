@@ -460,10 +460,16 @@ public class Client {
 	 * Toggles between quiet mode and verbose mode
 	 */
 	public void toggleMode() {
-		if (verbose)
-			verbose = false;
-		else
-			verbose = true;
+		if (test) {
+			test = false;
+			REQUEST_PORT = 8081;
+		}
+
+		else{
+			test = true;
+			REQUEST_PORT = 8080;
+		}
+
 	}
 
 	public void printAck(byte[] ack) {
