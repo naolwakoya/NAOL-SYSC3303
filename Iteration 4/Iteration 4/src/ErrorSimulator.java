@@ -147,7 +147,7 @@ public class ErrorSimulator implements Runnable {
 			}
 		} else if (packetType.equals("request") && whatDo == 4) {
 			// takes the request packets and alters the opcode to an invalid
-			// opcode
+			// opcodew
 			System.out.println("Altering opcode of request packet...");
 			data[0] = 9;
 			data[1] = 9;
@@ -260,8 +260,35 @@ public class ErrorSimulator implements Runnable {
 
 		}else if (packetType.equals("request") && whatDo == 10) {
 			System.out.println("Altering opcode of request packet...");
+			int bNum = 9999999;
 
+			while(true) {
+				System.out.println("\nEnter a Block Number between 0-65535");
+				try {
+					bNum = Integer.parseInt(input.nextLine());  // user's choice
+					if (bNum < 0 || bNum > 65535) { 
+						System.out.println("\n invalid choice for block number");
+					}
+				} catch (NumberFormatException n) {
+					System.out.println("\nInvalid choice for block number");
+				}
+				break;
+			}
 
+			// modify block number
+			data[2] = (byte)(bNum / 256);
+			data[3] = (byte)(bNum % 256);
+
+			try {
+				sendPacket = new DatagramPacket(data, receivePacket.getLength(), InetAddress.getLocalHost(),
+						server1Port);
+				System.out.println("Forwarding packet to server on port " + sendPacket.getPort());
+				sendReceiveSocket.send(sendPacket);
+				System.out.println("Packet forwarded.");
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+				System.exit(1);
+			}
 		}
 
 		try {
