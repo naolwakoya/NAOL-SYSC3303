@@ -7,22 +7,22 @@ public class ErrorSimulator{
 	private DatagramSocket sendReceiveSocket;
 	private DatagramPacket receivePacket, sendPacket;
 
-	boolean isConnected = false;
+	private boolean isConnected = false;
 
-	boolean readFinished = false;
-	boolean writeFinished = false;
+	private boolean readFinished = false;
+	private boolean writeFinished = false;
 
-	InetAddress clientAddress;
-	int clientPort;
+	private InetAddress clientAddress;
+	private int clientPort;
 
-	int proxyPort = 8080;
-	int server1Port = 8081;
+	private int proxyPort = 23;
+	private int server1Port = 69;
 
-	boolean requestReceived = false;
+	private boolean requestReceived = false;
 
-	Scanner input;
+	private Scanner input;
 
-	public void connect() {
+	private void connect() {
 		// scanner to receive user input from prompts
 		input = new Scanner(System.in);
 
@@ -37,9 +37,10 @@ public class ErrorSimulator{
 		isConnected = true;
 	}
 
-	public void run() {
+
+	private void run() {
 		//if no connection has been established, the connect method will run
-		if (isConnected == false) {
+		if (!isConnected) {
 			connect();
 		}
 		while(true){
@@ -51,23 +52,22 @@ public class ErrorSimulator{
 					data = receiveFromClient();
 
 					String packetType;
-					String requestType = "";
+					packetType = getPacketType(data);
 
-					if(requestReceived == false){
-						requestType = getRequestType(data);
-						requestReceived = true;
+					//if data packet received from client is less than 516 bytes, then that is the last data packet
+					if(packetType.equals("data") && receivePacket.getLength()< 516){
+						writeFinished = true;
+						System.out.println("Last Packet received, terminating write transaction. PacketLength: " + receivePacket.getLength() + " " + writeFinished);
 					}
 
 					sendToServer(data);
 
 					//check to see if transaction is finished after ack packet sent to server in read situation
-					if(readFinished == true || writeFinished == true){
-						server1Port = 8081;
+					if(readFinished){
+						server1Port = 69;
 						System.out.println("Breaking Loop");
 						break;
 					}
-
-					data = new byte[516];
 
 					data = receiveFromServer();
 
@@ -76,20 +76,22 @@ public class ErrorSimulator{
 					packetType = getPacketType(data);
 					if(packetType.equals("data") && receivePacket.getLength()< 516){
 						readFinished = true;
-						System.out.println("Last Packet received terminating read Transaction. PacketLength: " + receivePacket.getLength() + " " + readFinished);
-					}else if(packetType.equals("ack")){
-						writeFinished = true;
-						System.out.println("Last Packet received terminating write transaction. PacketLength: " + receivePacket.getLength() + " " + writeFinished);
+						System.out.println("Last Packet received, terminating read Transaction. PacketLength: " + receivePacket.getLength() + " " + readFinished);
 					}
 
 					sendToClient(data);
+
+					if(writeFinished){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
 
 				}
 
 				readFinished = false;
 				writeFinished = false;
 			}else if(operation == 4){
-
 				//branch for changing request packets opcode
 				byte[] data;
 				data = receiveFromClient();
@@ -105,7 +107,7 @@ public class ErrorSimulator{
 
 				sendToClient(data);
 
-				server1Port = 8081;
+				server1Port = 69;
 
 			} else if (operation == 5) {
 				//branch for changing filename in the the request packet
@@ -142,7 +144,7 @@ public class ErrorSimulator{
 
 				sendToClient(data);
 
-				server1Port = 8081;
+				server1Port = 69;
 			}else if(operation == 6){
 				//branch for changing the mode in the request packet
 				//takes the request packet and alters the mode
@@ -175,7 +177,7 @@ public class ErrorSimulator{
 
 				sendToClient(data);
 
-				server1Port = 8081;
+				server1Port = 69;
 
 			}else if(operation == 7){
 				//branch for changing the opcode in the data packet
@@ -202,7 +204,7 @@ public class ErrorSimulator{
 
 					sendToClient(data);
 
-					server1Port = 8081;
+					server1Port = 69;
 
 				}else if(data[1] == 2){
 					//if data[1] equals to 2, then it is a write request
@@ -226,7 +228,7 @@ public class ErrorSimulator{
 
 					sendToClient(data); //forward error packet back to client
 
-					server1Port = 8081;
+					server1Port = 69;
 				}
 
 			}else if(operation == 8){
@@ -254,7 +256,7 @@ public class ErrorSimulator{
 
 					sendToClient(data); //sending the data packet with the changed block number to client
 
-					server1Port = 8081;
+					server1Port = 69;
 
 				}else if(data[1] == 2){
 					//if data[1] equals to 2, then it is a write request
@@ -282,7 +284,7 @@ public class ErrorSimulator{
 
 					sendToClient(data); //forward error packet back to client
 
-					server1Port = 8081;
+					server1Port = 69;
 				}
 
 			}else if(operation == 9){
@@ -316,7 +318,7 @@ public class ErrorSimulator{
 
 					sendToServer(data);
 
-					server1Port = 8081;
+					server1Port = 69;
 
 				}else if(data[1] == 2){
 					//write request, first ack packet will be sent by server
@@ -372,22 +374,278 @@ public class ErrorSimulator{
 
 				}
 
-			}else if(operation ==11){
-				//branch for delaying a packet
+			}else if(operation == 11){
+				//branch for delaying a request packet
+
+				System.out.println("Delaying the request packet for 1000 milliseconds.");
+
+				boolean packetDelayed = false;
+
+				while(true){
+
+					byte[] data;
+
+					data = receiveFromClient();
+
+					String packetType;
+					packetType = getPacketType(data);
+
+					if(packetType.equals("data") && receivePacket.getLength() < 516){
+						writeFinished = true;
+						System.out.println("Last Packet received, terminating write transaction. PacketLength: " + receivePacket.getLength() + " " + writeFinished);
+					}
+
+					//the first packet received from the client should be a request packet. after receiving it, sleep
+					//for 1000 milliseconds then continue to send to server
+					if(!packetDelayed) {
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							System.exit(1);
+						}
+						packetDelayed = true;
+					}
+
+					if(!requestReceived){
+						requestReceived = true;
+					}
+
+					sendToServer(data);
+
+					//check to see if transaction is finished after ack packet sent to server in read situation
+					if(readFinished ){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
+
+					data = receiveFromServer();
+
+					//check if transaction is finished after packet forwarded to server
+					//last data packet has been received in a read request or write request
+					packetType = getPacketType(data);
+					if(packetType.equals("data") && receivePacket.getLength() < 516){
+						readFinished = true;
+						System.out.println("Last Packet received, terminating read Transaction. PacketLength: " + receivePacket.getLength() + " " + readFinished);
+					}
+
+					sendToClient(data);
+					if(writeFinished ){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
+
+				}
+
+				readFinished = false;
+				writeFinished = false;
+
+
+			}else if(operation == 12){
+				//branch for delaying a data packet
+				System.out.println("Delaying the first data packet for 1000 milliseconds.");
+
+				boolean packetDelayed = false;
+
+				while(true){
+
+					byte[] data;
+					String packetType;
+
+					data = receiveFromClient();
+
+					//checks to see if a request packet has been received
+					if(!requestReceived){
+						requestReceived = true;
+					}
+
+					packetType = getPacketType(data);
+					if(packetType.equals("data") && receivePacket.getLength() < 516){
+						writeFinished = true;
+						System.out.println("Last Packet received, terminating write transaction. PacketLength: " + receivePacket.getLength() + " " + writeFinished);
+					}
+
+
+					//checks to see if packet from client is a data packet
+					if(data[1] == 3){
+						//if data[1] equals 3, then it is a data packet
+						if(!packetDelayed) {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								System.exit(1);
+							}
+							packetDelayed = true;
+						}
+					}
+
+					sendToServer(data);
+
+					//check to see if transaction is finished after ack packet sent to server in read situation
+					if(readFinished){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
+
+					data = receiveFromServer();
+
+					//checks to see if packet from client is a data packet
+					if(data[1] == 3){
+						//if data[1] equals 3, then it is a data packet
+						if(!packetDelayed) {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								System.exit(1);
+							}
+							packetDelayed = true;
+						}
+					}
+
+					//check if transaction is finished after packet forwarded to server
+					//last data packet has been received in a read request or write request
+					packetType = getPacketType(data);
+					if(packetType.equals("data") && receivePacket.getLength() < 516){
+						readFinished = true;
+						System.out.println("Last Packet received, terminating read Transaction. PacketLength: " + receivePacket.getLength() + " " + readFinished);
+					}
+
+					sendToClient(data);
+
+					if(writeFinished){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
+
+				}
+
+				readFinished = false;
+				writeFinished = false;
+			}else if(operation == 13){
+				//branch for delaying an ack packet
+				System.out.println("Delaying the first ack packet for 1000 milliseconds.");
+
+				boolean packetDelayed = false;
+
+				while(true){
+
+					byte[] data;
+					String packetType;
+
+					data = receiveFromClient();
+
+					if(!requestReceived){
+						requestReceived = true;
+					}
+
+					packetType = getPacketType(data);
+					if(packetType.equals("data") && receivePacket.getLength() < 516){
+						writeFinished = true;
+						System.out.println("Last Packet received, terminating write transaction. PacketLength: " + receivePacket.getLength() + " " + writeFinished);
+					}
+
+
+					//checks to see if packet from client is an ack packet
+					if(data[1] == 4){
+						//if data[1] equals 4, then it is a ack packet
+						if(!packetDelayed) {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								System.exit(1);
+							}
+							packetDelayed = true;
+						}
+					}
+
+
+					sendToServer(data);
+
+					//check to see if transaction is finished after ack packet sent to server in read situation
+					if(readFinished){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
+
+					data = receiveFromServer();
+
+					//checks to see if packet from server is an ack packet
+					if(data[1] == 4){
+						//if data[1] equals 4, then it is a ack packet
+						if(!packetDelayed) {
+							try {
+								Thread.sleep(1000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+								System.exit(1);
+							}
+							packetDelayed = true;
+						}
+					}
+
+					//check if transaction is finished after packet forwarded to server
+					//last data packet has been received in a read request or write request
+					packetType = getPacketType(data);
+					if(packetType.equals("data") && receivePacket.getLength() < 516) {
+						readFinished = true;
+						System.out.println("Last Packet received, terminating read Transaction. PacketLength: " + receivePacket.getLength() + " " + readFinished);
+					}
+
+					sendToClient(data);
+
+					//check to see if transaction is finished after ack packet sent to server in read situation
+					if(writeFinished){
+						server1Port = 69;
+						System.out.println("Breaking Loop");
+						break;
+					}
+
+
+				}
+
+				readFinished = false;
+				writeFinished = false;
+				requestReceived = false;
+
+			}else if(operation == 14){
+				//branch for duplicating a request packet
+			}else if(operation == 15){
+				//branch for duplicating a data packet
+			}else if(operation == 16){
+				//branch for duplicating an ack packet
+			}else if(operation == 17){
+				//branch for losing the request packet
+			}else if(operation == 18){
+				//branch for losing the first data packet
+			}else if(operation == 19){
+				//branch for losing an ack packet
 			}
 
 		}
 	}
 
-	// asks the user what type of operation to perform
-	public int getOperation() {
+	/*
+	Asks the user what operation they would like to do to the packets.
+	 */
+	private int getOperation() {
 		int response = 9;
-		System.out.println("What would you like change?");
+		System.out.println("What would you like do?");
 		System.out.println("(0): normal operation");
-		System.out.println("(1): request packets");
-		System.out.println("(2): data packets");
-		System.out.println("(3): ack packets");
-		System.out.println("(4): Delay packet"); ////To-do
+		System.out.println("(1): change request packets");
+		System.out.println("(2): change data packets");
+		System.out.println("(3): change ack packets");
+		System.out.println("(4): Delay a packet");
+		System.out.println("(5): Send duplicate packet");
+		System.out.println("(6): Lose a packet");
+		System.out.println("(20): Close the ErrorSimulator");
 
 		response = input.nextInt();
 
@@ -415,8 +673,25 @@ public class ErrorSimulator{
 		}else if(response == 4){
 			System.out.println("(4)Delay Packet chosen");
 			System.out.println("Which packet would you like to delay?");
-			System.out.println("(11): Data packet");
-			System.out.println("(12): Ack packet");
+			System.out.println("(11): Request Packet");
+			System.out.println("(12): Data packet");
+			System.out.println("(13): Ack packet");
+		}else if(response ==5){
+			System.out.println("Which packet would you like to duplicate?");
+			System.out.println("(14): Request Packet");
+			System.out.println("(15): Data Packet");
+			System.out.println("(16): Ack Packet");
+		}else if(response == 6){
+			System.out.println("Which packet would you like to lose?");
+			System.out.println("(17): Request Packet");
+			System.out.println("(18): Data Packet");
+			System.out.println("(19): Ack Packet");
+		}
+
+		else if(response == 20){
+			System.out.println("ErrorSimulator Closing.");
+			System.out.println("Goodbye.");
+			System.exit(1);
 		}
 
 		response = input.nextInt();
@@ -428,13 +703,13 @@ public class ErrorSimulator{
 	private String getPacketType(byte[] data) {
 
 		if (data[1] == 1 || data[1] == 2) {
-			System.out.println("Pakcet type: Request");
+			System.out.println("Packet type: Request");
 			return "request";
 		} else if (data[1] == 3) {
-			System.out.println("Pakcet type: data");
+			System.out.println("Packet type: data");
 			return "data";
 		} else if (data[1] == 4) {
-			System.out.println("Pakcet type: ack");
+			System.out.println("Packet type: ack");
 			return "ack";
 		}
 		return "error";
