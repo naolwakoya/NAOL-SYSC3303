@@ -15,8 +15,8 @@ public class ErrorSimulator{
 	private InetAddress clientAddress;
 	private int clientPort;
 
-	private int proxyPort = 23;
-	private int server1Port = 69;
+	private int proxyPort = 8080;
+	private int server1Port = 8081;
 
 	private boolean requestReceived = false;
 
@@ -64,7 +64,7 @@ public class ErrorSimulator{
 
 					//check to see if transaction is finished after ack packet sent to server in read situation
 					if(readFinished){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}
@@ -82,7 +82,7 @@ public class ErrorSimulator{
 					sendToClient(data);
 
 					if(writeFinished){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}
@@ -107,7 +107,7 @@ public class ErrorSimulator{
 
 				sendToClient(data);
 
-				server1Port = 69;
+				server1Port = 8081;
 
 			} else if (operation == 5) {
 				//branch for changing filename in the the request packet
@@ -144,7 +144,7 @@ public class ErrorSimulator{
 
 				sendToClient(data);
 
-				server1Port = 69;
+				server1Port = 8081;
 			}else if(operation == 6){
 				//branch for changing the mode in the request packet
 				//takes the request packet and alters the mode
@@ -177,7 +177,7 @@ public class ErrorSimulator{
 
 				sendToClient(data);
 
-				server1Port = 69;
+				server1Port = 8081;
 
 			}else if(operation == 7){
 				//branch for changing the opcode in the data packet
@@ -204,7 +204,7 @@ public class ErrorSimulator{
 
 					sendToClient(data);
 
-					server1Port = 69;
+					server1Port = 8081;
 
 				}else if(data[1] == 2){
 					//if data[1] equals to 2, then it is a write request
@@ -228,7 +228,7 @@ public class ErrorSimulator{
 
 					sendToClient(data); //forward error packet back to client
 
-					server1Port = 69;
+					server1Port = 8081;
 				}
 
 			}else if(operation == 8){
@@ -256,7 +256,7 @@ public class ErrorSimulator{
 
 					sendToClient(data); //sending the data packet with the changed block number to client
 
-					server1Port = 69;
+					server1Port = 8081;
 
 				}else if(data[1] == 2){
 					//if data[1] equals to 2, then it is a write request
@@ -284,7 +284,7 @@ public class ErrorSimulator{
 
 					sendToClient(data); //forward error packet back to client
 
-					server1Port = 69;
+					server1Port = 8081;
 				}
 
 			}else if(operation == 9){
@@ -318,7 +318,7 @@ public class ErrorSimulator{
 
 					sendToServer(data);
 
-					server1Port = 69;
+					server1Port = 8081;
 
 				}else if(data[1] == 2){
 					//write request, first ack packet will be sent by server
@@ -337,7 +337,7 @@ public class ErrorSimulator{
 
 					sendToClient(data);
 
-					server1Port = 69;
+					server1Port = 8081;
 
 				}
 
@@ -370,7 +370,7 @@ public class ErrorSimulator{
 
 					sendToServer(data);
 
-					server1Port = 69;
+					server1Port = 8081;
 
 				}
 
@@ -415,7 +415,7 @@ public class ErrorSimulator{
 
 					//check to see if transaction is finished after ack packet sent to server in read situation
 					if(readFinished ){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}
@@ -432,7 +432,7 @@ public class ErrorSimulator{
 
 					sendToClient(data);
 					if(writeFinished ){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}
@@ -486,7 +486,7 @@ public class ErrorSimulator{
 
 					//check to see if transaction is finished after ack packet sent to server in read situation
 					if(readFinished){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}
@@ -570,7 +570,7 @@ public class ErrorSimulator{
 
 					//check to see if transaction is finished after ack packet sent to server in read situation
 					if(readFinished){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}
@@ -603,7 +603,7 @@ public class ErrorSimulator{
 
 					//check to see if transaction is finished after ack packet sent to server in read situation
 					if(writeFinished){
-						server1Port = 69;
+						server1Port = 8081;
 						System.out.println("Breaking Loop");
 						break;
 					}

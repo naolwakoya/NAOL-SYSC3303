@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="632f9d8e-27f9-4db4-8a1c-1aee678c5b2c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Iteration 4/src/ErrorSimulator.java" beforeDir="false" afterPath="$PROJECT_DIR$/Iteration 4/src/ErrorSimulator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Iteration 4/Client.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Iteration 4/Client.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Iteration 4/ErrorSimulator.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Iteration 4/ErrorSimulator.class" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -42,13 +39,21 @@
       <file leaf-file-name="ErrorSimulator.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Iteration 4/src/ErrorSimulator.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="668">
-              <caret line="819" column="1" selection-start-line="819" selection-start-column="1" selection-end-line="819" selection-end-column="1" />
+            <state relative-caret-position="-1857">
+              <caret line="605" column="42" selection-start-line="605" selection-start-column="42" selection-end-line="605" selection-end-column="42" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>time</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -207,16 +212,15 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1533671265802</updated>
-      <workItem from="1533671267855" duration="8080000" />
+      <workItem from="1533671267855" duration="9081000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="8080000" />
+    <option name="totallyTimeSpent" value="9081000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -228,13 +232,13 @@
       <window_info anchor="right" id="Maven Projects" />
       <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.32962963" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32962963" />
       <window_info anchor="bottom" id="Terminal" />
       <window_info id="Capture Tool" />
       <window_info id="Designer" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49861878" visible="true" weight="0.1203125" />
       <window_info anchor="right" id="Database" />
-      <window_info active="true" id="Structure" order="1" sideWeight="0.5013812" side_tool="true" visible="true" weight="0.1203125" />
+      <window_info id="Structure" order="1" sideWeight="0.5013812" side_tool="true" visible="true" weight="0.1203125" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" />
       <window_info anchor="right" id="Theme Preview" />
@@ -275,8 +279,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Iteration 4/src/ErrorSimulator.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="668">
-          <caret line="819" column="1" selection-start-line="819" selection-start-column="1" selection-end-line="819" selection-end-column="1" />
+        <state relative-caret-position="-1857">
+          <caret line="605" column="42" selection-start-line="605" selection-start-column="42" selection-end-line="605" selection-end-column="42" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
