@@ -2,8 +2,11 @@ import java.io.ByteArrayOutputStream;
 
 public class TftpData extends TftpPacket {
 
+	//The maximum size of data allowed
 	static final int MAX_SIZE = 512;
+	//The minimum size of the TFTP data packet
 	static final int MIN_SIZE = 4;
+	
 	int blockNumber = 0;
 	byte[] data = null;
 	int dataLength;
@@ -37,9 +40,13 @@ public class TftpData extends TftpPacket {
 	public boolean validateFormat(byte[] data, int packetLength) {
 		if (data == null)
 			return false;
-		if (packetLength > data.length || packetLength < MIN_SIZE || packetLength > 516){
+		if (packetLength > data.length){
 			return false;
-
+		}
+		if (packetLength < MIN_SIZE)
+			return false;
+		if (packetLength > 516){
+			return false;
 		}
 		// Check the opcode
 		if ((data[0] != 0) && (data[1] != 3))

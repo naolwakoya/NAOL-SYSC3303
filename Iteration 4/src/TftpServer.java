@@ -10,28 +10,28 @@ public class TftpServer {
 	String fileName;
 	public boolean serverOn;
 	private boolean isReadRequest;
+	int threadCount = 0;
 
 	public TftpServer() {
+		
 		serverOn = true;
 		try {
-			System.out.println("SERVER IS Instantiated");
-
 			// Create a datagram socket for receiving packets on port 69
-			serverSocket = new DatagramSocket(8081);
+			serverSocket = new DatagramSocket(69);
 
 		} catch (SocketException se) {
 			se.printStackTrace();
 			System.exit(1);
 		}
-	} 
+	}
 
+	/**
+	 * Wait to receive a request packet from a client
+	 */
 	public void startReceiving() {
 		DatagramPacket receivePacket;
 		Thread thread;
 		TftpRequest req = new TftpRequest();
-		;
-
-		System.out.println("Starting server");
 
 		while (serverOn) {
 
@@ -39,7 +39,7 @@ public class TftpServer {
 				// Create a DatagramPacket for receiving packets
 				byte data[] = new byte[516];
 				receivePacket = new DatagramPacket(data, data.length);
-				System.out.println("Waiting...");
+				System.out.println("SERVER: Waiting for request...");
 				serverSocket.receive(receivePacket);
 				// Check if it is a valid tftp request operation
 				if (req.validateFormat(receivePacket.getData(), receivePacket.getLength())) {
@@ -53,18 +53,17 @@ public class TftpServer {
 						System.out.println("Received a read request");
 						isReadRequest = true;
 					}
-					
+
 					// Start the connection thread
-					thread = new Thread(new TftpClientConnectionThread(isReadRequest, receivePacket));
+					thread = new Thread(new TftpClientConnectionThread(this, isReadRequest, receivePacket));
 					thread.start();
-				}
-				else{
+				} else {
 					DatagramSocket sendSocket = new DatagramSocket();
 					TftpError error = new TftpError(4, "Invalid read or write request");
 					sendSocket.send(error.generatePacket(receivePacket.getAddress(), receivePacket.getPort()));
 					sendSocket.close();
 				}
-					
+
 			} catch (SocketTimeoutException e) {
 				continue;
 			} catch (SocketException e) {
@@ -76,16 +75,42 @@ public class TftpServer {
 				System.exit(1);
 			}
 		}
+		System.out.println("Quitting server... waiting for all threads to finish");
+		while (getThreadCount()>0) {
+			try {
+				wait();
+			}catch (InterruptedException e) {
+				System.out.println("Quit was interrupted. Failed to quit.");
+				System.exit(1);
+			}
+		}
+		System.out.println("Successful shutdown");
+		System.exit(0);
+
 	}
 
+	synchronized public void incThreadCount() {
+		threadCount++;
+	}
 
-	/*
-	 * returns the server socket
+	synchronized public void decThreadCount() {
+		threadCount--;
+		if (threadCount <= 0) {
+			notifyAll();
+		}
+	}
+
+	synchronized public int getThreadCount() {
+		return threadCount;
+	}
+
+	/**
+	 * Returns the server socket
+	 * @return
 	 */
-	public DatagramSocket getServerSocket(){
+	public DatagramSocket getServerSocket() {
 		return serverSocket;
 	}
-
 
 	public static void main(String[] args) {
 

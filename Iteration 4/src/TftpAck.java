@@ -2,6 +2,7 @@
 public class TftpAck extends TftpPacket {
 
 	int blockNumber = 0;
+	//The length of the TFTP ACK packet
 	private static final int PACKET_LENGTH = 4;
 
 	public TftpAck(int blockNumber) {
@@ -10,10 +11,14 @@ public class TftpAck extends TftpPacket {
 	
 	public TftpAck(){};
 
+	/**
+	 * Returns the block number of the tftp packet
+	 * @return
+	 */
 	public int getBlockNumber() {
 		return blockNumber;
 	}
-
+	
 	@Override
 	public byte[] generateData() {
 		byte[] data = new byte[4];
