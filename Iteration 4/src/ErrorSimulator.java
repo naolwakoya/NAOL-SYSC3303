@@ -616,11 +616,70 @@ public class ErrorSimulator{
 				requestReceived = false;
 
 			}else if(operation == 14){
+				Scanner reader = new Scanner(System.in);  // Reading from System.in
+
 				//branch for duplicating a request packet
+				if (getPacketType(data).equals("request") {
+					System.out.println("How many duplicates to send? ");
+					int numberDuplicates = reader.nextInt();
+
+					System.out.println("How much space between duplicates in ms ");
+					int spaceBetweenDuplicates = reader.nextInt();
+
+					for (int numDuplicates=0; numDuplicates < numberDuplicates; numDuplicates++) {
+						try {
+							Thread.sleep(spaceBetweenDuplicates);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							System.exit(1);
+						}
+						sendPacket(data);
+					}
+				}
 			}else if(operation == 15){
 				//branch for duplicating a data packet
+				Scanner reader = new Scanner(System.in);  // Reading from System.in
+
+				//branch for duplicating a request packet
+				if (getPacketType(data).equals("data") {
+					System.out.println("How many duplicates to send? ");
+					int numberDuplicates = reader.nextInt();
+
+					System.out.println("How much space between duplicates in ms ");
+					int spaceBetweenDuplicates = reader.nextInt();
+
+					for (int numDuplicates=0; numDuplicates < numberDuplicates; numDuplicates++) {
+						try {
+							Thread.sleep(spaceBetweenDuplicates);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							System.exit(1);
+						}
+						sendPacket(data);
+					}
+				}
 			}else if(operation == 16){
 				//branch for duplicating an ack packet
+				Scanner reader = new Scanner(System.in);  // Reading from System.in
+
+				//branch for duplicating a request packet
+				if (getPacketType(data).equals("ack") {
+					System.out.println("How many duplicates to send? ");
+					int numberDuplicates = reader.nextInt();
+
+					System.out.println("How much space between duplicates in ms ");
+					int spaceBetweenDuplicates = reader.nextInt();
+
+					for (int numDuplicates=0; numDuplicates < numberDuplicates; numDuplicates++) {
+						try {
+							Thread.sleep(spaceBetweenDuplicates);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+							System.exit(1);
+						}
+						sendPacket(data);
+					}
+				}
 			}else if(operation == 17){
 				//branch for losing the request packet
 			}else if(operation == 18){
